@@ -1334,7 +1334,7 @@ void UI::drawBlock(unsigned char blockType, int x, int y, float scale)
         glm::scale(glm::mat4(1.0f), glm::vec3(scale, -scale, scale)) *
         glm::vec4(vertex.x, vertex.y, vertex.z, 1.0f);
 
-      blockVertices.push({position.x, position.y, position.z, vertex.u, vertex.v, vertex.s});
+      blockVertices.push(position.x, position.y, position.z, vertex.u, vertex.v, vertex.s);
     }
   }
   else
@@ -1379,7 +1379,7 @@ void UI::drawBlock(unsigned char blockType, int x, int y, float scale)
         glm::scale(glm::mat4(1.0f), glm::vec3(scale, -scale, scale)) *
         glm::vec4(vertex.x, vertex.y, vertex.z, 1.0f);
 
-      blockVertices.push({position.x, position.y, position.z, vertex.u, vertex.v, vertex.s});
+      blockVertices.push(position.x, position.y, position.z, vertex.u, vertex.v, vertex.s);
     }
   }
 }
@@ -1388,13 +1388,13 @@ void UI::drawInterface(int x0, int y0, int x1, int y1, int u0, int v0, int u1, i
 {
   float size = 0.00390625f;
 
-  interfaceVertices.push({x0, y0, z, u0 * size, v0 * size, shade});
-  interfaceVertices.push({x0, y0 + y1, z, u0 * size, (v0 + v1) * size, shade});
-  interfaceVertices.push({x0 + x1, y0 + y1, z, (u0 + u1) * size, (v0 + v1) * size, shade});
+  interfaceVertices.push(x0, y0, z, u0 * size, v0 * size, shade);
+  interfaceVertices.push(x0, y0 + y1, z, u0 * size, (v0 + v1) * size, shade);
+  interfaceVertices.push(x0 + x1, y0 + y1, z, (u0 + u1) * size, (v0 + v1) * size, shade);
 
-  interfaceVertices.push({x0, y0, z, u0 * size, v0 * size, shade});
-  interfaceVertices.push({x0 + x1, y0 + y1, z, (u0 + u1) * size, (v0 + v1) * size, shade});
-  interfaceVertices.push({x0 + x1, y0, z, (u0 + u1) * size, v0 * size, shade});
+  interfaceVertices.push(x0, y0, z, u0 * size, v0 * size, shade);
+  interfaceVertices.push(x0 + x1, y0 + y1, z, (u0 + u1) * size, (v0 + v1) * size, shade);
+  interfaceVertices.push(x0 + x1, y0, z, (u0 + u1) * size, v0 * size, shade);
 }
 
 void UI::drawInterface(int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, float shade)
@@ -1406,13 +1406,13 @@ void UI::drawInterface(int x0, int y0, int x1, int y1, int u, int v, float shade
 {
   float size = 0.00390625;
 
-  interfaceVertices.push({x0, y0, z, x1 * size, y1 * size, shade});
-  interfaceVertices.push({x0, y0 + v, z, x1 * size, (y1 + v) * size, shade});
-  interfaceVertices.push({x0 + u, y0 + v, z, (x1 + u) * size, (y1 + v) * size, shade});
+  interfaceVertices.push(x0, y0, z, x1 * size, y1 * size, shade);
+  interfaceVertices.push(x0, y0 + v, z, x1 * size, (y1 + v) * size, shade);
+  interfaceVertices.push(x0 + u, y0 + v, z, (x1 + u) * size, (y1 + v) * size, shade);
 
-  interfaceVertices.push({x0, y0, z, x1 * size, y1 * size, shade});
-  interfaceVertices.push({x0 + u, y0 + v, z, (x1 + u) * size, (y1 + v) * size, shade});
-  interfaceVertices.push({x0 + u, y0, z, (x1 + u) * size, y1 * size, shade});
+  interfaceVertices.push(x0, y0, z, x1 * size, y1 * size, shade);
+  interfaceVertices.push(x0 + u, y0 + v, z, (x1 + u) * size, (y1 + v) * size, shade);
+  interfaceVertices.push(x0 + u, y0, z, (x1 + u) * size, y1 * size, shade);
 }
 
 void UI::drawInterface(int x0, int y0, int x1, int y1, int u, int v, float shade)
@@ -1437,13 +1437,13 @@ void UI::drawFont(const char* text, int x, int y, float shade, int z)
 
     int height = 8;
 
-    fontVertices.push({x + width, y, z, u / 128.0f, v / 128.0f, shade});
-    fontVertices.push({x + width, y + height, z, u / 128.0f, (v + height) / 128.0f, shade});
-    fontVertices.push({x + width + height, y + height, z, (u + height) / 128.0f, (v + height) / 128.0f, shade});
+    fontVertices.push(x + width, y, z, u / 128.0f, v / 128.0f, shade);
+    fontVertices.push(x + width, y + height, z, u / 128.0f, (v + height) / 128.0f, shade);
+    fontVertices.push(x + width + height, y + height, z, (u + height) / 128.0f, (v + height) / 128.0f, shade);
 
-    fontVertices.push({x + width, y, z, u / 128.0f, v / 128.0f, shade});
-    fontVertices.push({x + width + height, y + height, z, (u + height) / 128.0f, (v + height) / 128.0f, shade});
-    fontVertices.push({x + width + height, y, z, (u + height) / 128.0f, v / 128.0f, shade});
+    fontVertices.push(x + width, y, z, u / 128.0f, v / 128.0f, shade);
+    fontVertices.push(x + width + height, y + height, z, (u + height) / 128.0f, (v + height) / 128.0f, shade);
+    fontVertices.push(x + width + height, y, z, (u + height) / 128.0f, v / 128.0f, shade);
 
     width += FONT_WIDTHS[text[index]];
   }
