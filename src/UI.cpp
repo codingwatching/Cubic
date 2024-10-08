@@ -591,7 +591,7 @@ void UI::drawFPS()
   fps += std::to_string(game.lastChunkUpdates);
   fps += " chunk updates";
   
-  drawShadowedFont(fps.c_str(), 3.0f, 3.0f, 1.0f);
+  drawShadowedFont(fps.c_str(), 3, 3, 1.0f);
 }
 
 void UI::drawCrosshair()
@@ -603,7 +603,7 @@ void UI::drawLogs()
 {
   for (auto log = logs.begin(); log != logs.end();)
   {
-    auto index = logs.end() - log - 1;
+    auto index = int(logs.end() - log - 1);
 
     if (game.timer.milliTime() - log->created > 5000)
     {
@@ -611,34 +611,35 @@ void UI::drawLogs()
     }
     else
     {
-      float maxWidth = game.scaledWidth / 2 + 18.0f;
-      float width = 0.0f;
+      int maxWidth = game.scaledWidth / 2 + 18;
+      int width = 0;
 
-      float interfaceY = game.scaledHeight - 35.0f - index * 10.0f;
-      float fontY = game.scaledHeight - 33.8f - index * 10.0f;
+      int interfaceHeight = 11;
+      int interfaceY = game.scaledHeight - 35 - index * interfaceHeight;
+      int fontY = game.scaledHeight - 33 - index * interfaceHeight;
 
       if (isTouch)
       {
-        maxWidth = game.scaledWidth * 0.45f;
+        maxWidth = int(game.scaledWidth * 0.45f);
 
-        auto offset = 14.0f;
+        auto offset = 14;
 
-        interfaceY = offset + index * 10.0f;
-        fontY = offset + 1.2f + index * 10.0f;
+        interfaceY = offset + index * interfaceHeight;
+        fontY = offset + 2 + index * interfaceHeight;
       }
 
-      for (size_t i = 0; i < log->text.length(); i++)
+      for (const auto& c : log->text)
       {
-        width += FONT_WIDTHS[int(log->text[i])];
+        width += FONT_WIDTHS[c];
       }
 
       if (width > maxWidth)
       {
-        maxWidth = width + 4.0f;
+        maxWidth = width + 4;
       }
 
-      drawInterface(0.0f, interfaceY, maxWidth, 10.0f, 183, 0, 16, 16, 0.12f);
-      drawFont(log->text.c_str(), 1.8f, fontY, 1.0f, 1.1f);
+      drawInterface(0, interfaceY, maxWidth, interfaceHeight, 183, 0, 16, 16, 0.12f);
+      drawFont(log->text.c_str(), 2, fontY, 1.0f, 2);
 
       log++;
     }
@@ -647,14 +648,14 @@ void UI::drawLogs()
 
 void UI::drawHotbar() 
 {
-  drawInterface(game.scaledWidth / 2 - 91 - (isTouch * 21 / 2), game.scaledHeight - 22, 0, 0, 182 + float(isTouch * 21), 22);
+  drawInterface(game.scaledWidth / 2 - 91 - (isTouch * 21 / 2), game.scaledHeight - 22, 0, 0, 182 + isTouch * 21, 22);
 
   if (isTouch)
   {
     drawInterface(game.scaledWidth / 2 - 91 + 179 - 21 / 2, game.scaledHeight - 22, 48, 23, 23, 22);
   }
 
-  drawInterface(game.scaledWidth / 2 - 92 + float(game.localPlayer.inventoryIndex) * 20 - (isTouch * 21 / 2), game.scaledHeight - 23, 0, 22, 24, 24);
+  drawInterface(game.scaledWidth / 2 - 92 + game.localPlayer.inventoryIndex * 20 - (isTouch * 21 / 2), game.scaledHeight - 23, 0, 22, 24, 24);
 
   for (int i = 0; i < LocalPlayer::INVENTORY_SIZE; i++)
   {
@@ -663,18 +664,19 @@ void UI::drawHotbar()
     float x = game.scaledWidth / 2.0f - 86.8f + i * 20.0f - (isTouch * 21 / 2);
     float y = game.scaledHeight - 6.8f;
 
-    drawBlock(blockType, x, y, 9.8f);
+    drawBlock(blockType, int(x), int(y), 9.625f);
   }
 }
 
 bool UI::drawTouchControls(bool invisible)
 {
-  float buttonOffsetX = 30.0f;
-  float buttonOffsetY = 25.0f;
-  float buttonOffsetZ = 65.0f;
+  int buttonOffsetX = 30;
+  int buttonOffsetY = 25;
+  int buttonOffsetZ = 65;
 
-  float buttonSize = std::max(game.scaledHeight, game.scaledWidth) * 0.06f;
-  float jumpButtonSize = std::max(game.scaledHeight, game.scaledWidth) * 0.0625f;
+  int maxSize = std::max(game.scaledHeight, game.scaledWidth);
+  int buttonSize = int(maxSize * 0.0625f);
+  int jumpButtonSize = int(maxSize * 0.0625f);
 
   bool middleTouch = drawTouchButton((unsigned int)UI::Cancellable::Hold | (unsigned int)UI::Cancellable::Swipe, buttonOffsetX + buttonSize, game.scaledHeight - 2 * buttonSize - buttonOffsetY, buttonOffsetZ, "", buttonSize, buttonSize, true, invisible);
   if (middleTouch)
@@ -750,7 +752,7 @@ bool UI::drawTouchControls(bool invisible)
     touchState &= ~(unsigned int)UI::TouchState::Up;
   }
 
-  if (drawTouchButton((unsigned int)UI::Cancellable::Hold, game.scaledWidth - buttonOffsetX - 1.5f * buttonSize, game.scaledHeight - 2 * buttonSize - buttonOffsetY, buttonOffsetZ, game.localPlayer.noPhysics ? "\x7" : "\x4", jumpButtonSize, jumpButtonSize, true, invisible))
+  if (drawTouchButton((unsigned int)UI::Cancellable::Hold, game.scaledWidth - buttonOffsetX - int(1.5f * buttonSize), game.scaledHeight - 2 * buttonSize - buttonOffsetY, buttonOffsetZ, game.localPlayer.noPhysics ? "\x7" : "\x4", jumpButtonSize, jumpButtonSize, true, invisible))
   {
     if (middleTouch && game.localPlayer.moveState == (unsigned int)LocalPlayer::Move::None)
     {
@@ -768,9 +770,9 @@ bool UI::drawTouchControls(bool invisible)
     touchState &= ~(unsigned int)UI::TouchState::Jump;
   }
 
-  float otherButtonOffsetX = 1.5f;
-  float otherButtonOffsetY = 3.0f;
-  float otherButtonSize = std::max(game.scaledHeight, game.scaledWidth) * 0.03f;
+  int otherButtonOffsetX = 2;
+  int otherButtonOffsetY = 3;
+  int otherButtonSize = int(maxSize * 0.03f);
 
   if (drawTouchButton((unsigned int)UI::Cancellable::Hold, game.scaledWidth / 2 + otherButtonOffsetX, otherButtonOffsetY, buttonOffsetZ, "\xF0", otherButtonSize, otherButtonSize, invisible, invisible))
   {
@@ -790,7 +792,7 @@ bool UI::drawTouchControls(bool invisible)
     touchState &= ~(unsigned int)UI::TouchState::Menu;
   }
 
-  if (drawTouchButton((unsigned int)UI::Cancellable::Hold, game.scaledWidth / 2 - otherButtonSize - otherButtonOffsetX + 1.0f, otherButtonOffsetY, buttonOffsetZ, game.fullscreen ? "\x17" : "\x16", otherButtonSize, otherButtonSize, invisible, invisible))
+  if (drawTouchButton((unsigned int)UI::Cancellable::Hold, game.scaledWidth / 2 - otherButtonSize - otherButtonOffsetX + 1, otherButtonOffsetY, buttonOffsetZ, game.fullscreen ? "\x17" : "\x16", otherButtonSize, otherButtonSize, invisible, invisible))
   {
     if (!invisible)
     {
@@ -815,7 +817,7 @@ bool UI::drawTouchControls(bool invisible)
   for (int i = 0; i < LocalPlayer::INVENTORY_SIZE + 1; i++)
   {
     bool touched = (state == State::None || state == State::SelectBlockMenu) && 
-      drawTouchButton((unsigned int)UI::Cancellable::Hold | (unsigned int)UI::Cancellable::Swipe, game.scaledWidth / 2 - 90 + float(i) * 20 - 21 / 2, game.scaledHeight - 22 - 3.0f, buttonOffsetZ, "", 20, 22, false, true);
+      drawTouchButton((unsigned int)UI::Cancellable::Hold | (unsigned int)UI::Cancellable::Swipe, game.scaledWidth / 2 - 90 + i * 20 - 21 / 2, game.scaledHeight - 22 - 3, buttonOffsetZ, "", 20, 22, false, true);
 
     if (i == LocalPlayer::INVENTORY_SIZE)
     {
@@ -853,14 +855,14 @@ bool UI::drawTouchControls(bool invisible)
 
 bool UI::drawStatusMenu()
 {
-  int x = int(glm::ceil(game.scaledWidth / 16));
-  int y = int(glm::ceil(game.scaledHeight / 16));
+  int x = int(glm::ceil(game.scaledWidth / 16.0f));
+  int y = int(glm::ceil(game.scaledHeight / 16.0f));
 
   for (int i = 0; i < x; i++)
   {
     for (int j = 0; j < y; j++)
     {
-      drawInterface(i * 16.0f, j * 16.0f, 240.0f, 0.0f, 16.0f, 16.0f, 0.25f, 0.9f);
+      drawInterface(i * 16, j * 16, 240, 0, 16, 16, 0.25f, 0);
     }
   }
 
@@ -886,12 +888,12 @@ bool UI::drawStatusMenu()
 #else
     if (game.network.isConnected())
     {
-      float offset = -2.0f;
+      int offset = -2;
 
-      drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 38.0f + 2.0f + offset, 0.6f);
-      drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 25.0f + 2.0f + offset, 1.0f);
+      drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 38 + 2 + offset, 0.6f);
+      drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 25 + 2 + offset, 1.0f);
 
-      if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - 10.0f + 2.0f + offset, 1.0f, "Create a new room"))
+      if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - 10 + 2 + offset, 1, "Create a new room"))
       {
         if (game.network.isConnected())
         {
@@ -905,7 +907,7 @@ bool UI::drawStatusMenu()
         return true;
       }
 
-      if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 + 13.0f + 2.0f + offset, 1.0f, "Join room"))
+      if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 + 13 + 2 + offset, 1, "Join room"))
       {
         char* clipboardText = SDL_GetClipboardText();
         size_t clipboardTextLength = strlen(clipboardText);
@@ -928,10 +930,10 @@ bool UI::drawStatusMenu()
     }
     else
     {
-      drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 25.0f, 0.6f);
-      drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 12.0f, 1.0f);
+      drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 25, 0.6f);
+      drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 12, 1.0f);
 
-      if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 + 5.0f, 1.0f, "Play offline"))
+      if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 + 5, 1, "Play offline"))
       {
         closeMenu();
         return true;
@@ -941,7 +943,7 @@ bool UI::drawStatusMenu()
   }
   else
   {
-    drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 13.0f, 0.6f);
+    drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 13, 0.6f);
     drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2, game.scaledHeight / 2, 1.0f);
   }
 
@@ -950,14 +952,14 @@ bool UI::drawStatusMenu()
 
 bool UI::drawLoadMenu()
 {
-  const float offset = 73.5f;
+  const int offset = 73;
 
-  drawInterface(0.0f, 0.0f, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64.0f);
-  drawCenteredFont("Load Level", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65.0f);
+  drawInterface(0, 0, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64);
+  drawCenteredFont("Load Level", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65);
 
   for (int i = 0; i < 4; i++)
   {
-    if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16 + 24 * i, 65.0f, saves.size() >= i + 1 + 4 * page ? saves[i + 4 * page].name.c_str() : "-", saves.size() >= i + 1 + 4 * page))
+    if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16 + 24 * i, 65, saves.size() >= i + 1 + 4 * page ? saves[i + 4 * page].name.c_str() : "-", saves.size() >= i + 1 + 4 * page))
     {
       if (load(i + 4 * page))
       {
@@ -973,7 +975,7 @@ bool UI::drawLoadMenu()
     }
   }
 
-  if (drawButton(game.scaledWidth / 2 - 130.0f, game.scaledHeight / 2 - offset + 16 + 24 + 24 - 10.0f, 65.0f, "<", page > 0, 20.0f))
+  if (drawButton(game.scaledWidth / 2 - 130, game.scaledHeight / 2 - offset + 16 + 24 + 24 - 10, 65, "<", page > 0, 20))
   {
     page--;
 
@@ -981,7 +983,7 @@ bool UI::drawLoadMenu()
     return true;
   }
 
-  if (drawButton(game.scaledWidth / 2 + 110.0f, game.scaledHeight / 2 - offset + 16 + 24 + 24 - 10.0f, 65.0f, ">", page < (saves.size() / 4), 20.0f))
+  if (drawButton(game.scaledWidth / 2 + 110, game.scaledHeight / 2 - offset + 16 + 24 + 24 - 10, 65, ">", page < (saves.size() / 4), 20))
   {
     page++;
 
@@ -989,7 +991,7 @@ bool UI::drawLoadMenu()
     return true;
   }
 
-  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16 + 24 + 24 + 24 + 36, 65.0f, "Back to Menu"))
+  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16 + 24 + 24 + 24 + 36, 65, "Back to Menu"))
   {
     openMainMenu();
     return true;
@@ -1000,14 +1002,14 @@ bool UI::drawLoadMenu()
 
 bool UI::drawSaveMenu()
 {
-  const float offset = 73.5f;
+  const int offset = 73;
 
-  drawInterface(0.0f, 0.0f, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64.0f);
-  drawCenteredFont("Save Level", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65.0f);
+  drawInterface(0, 0, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64);
+  drawCenteredFont("Save Level", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65);
 
   for (int i = 0; i < 4; i++)
   {
-    if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16 + 24 * i, 65.0f, saves.size() >= i + 1 + 4 * page ? saves[i + 4 * page].name.c_str() : "-", saves.size() >= i + 4 * page))
+    if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16 + 24 * i, 65, saves.size() >= i + 1 + 4 * page ? saves[i + 4 * page].name.c_str() : "-", saves.size() >= i + 4 * page))
     {
       if (save(i + 4 * page))
       {
@@ -1023,7 +1025,7 @@ bool UI::drawSaveMenu()
     }
   }
 
-  if (drawButton(game.scaledWidth / 2 - 130.0f, game.scaledHeight / 2 - offset + 16 + 24 + 24 - 10.0f, 65.0f, "<", page > 0, 20.0f))
+  if (drawButton(game.scaledWidth / 2 - 130, game.scaledHeight / 2 - offset + 16 + 24 + 24 - 10, 65, "<", page > 0, 20))
   {
     page--;
 
@@ -1031,7 +1033,7 @@ bool UI::drawSaveMenu()
     return true;
   }
 
-  if (drawButton(game.scaledWidth / 2 + 110.0f, game.scaledHeight / 2 - offset + 16 + 24 + 24 - 10.0f, 65.0f, ">", page < (saves.size() / 4), 20.0f))
+  if (drawButton(game.scaledWidth / 2 + 110, game.scaledHeight / 2 - offset + 16 + 24 + 24 - 10, 65, ">", page < (saves.size() / 4), 20))
   {
     page++;
 
@@ -1039,7 +1041,7 @@ bool UI::drawSaveMenu()
     return true;
   }
 
-  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16 + 24 + 24 + 24 + 36, 65.0f, "Back to Menu"))
+  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16 + 24 + 24 + 24 + 36, 65, "Back to Menu"))
   {
     openMainMenu();
     return true;
@@ -1050,19 +1052,19 @@ bool UI::drawSaveMenu()
 
 bool UI::drawMainMenu()
 {
-  const float offset = 73.5f;
-  const float optionsOffset = 80.0f;
+  const int offset = 73;
+  const int optionsOffset = 80;
 
-  drawInterface(0.0f, 0.0f, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64.0f);
-  drawCenteredFont("Main Menu", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65.0f);
+  drawInterface(0, 0, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64);
+  drawCenteredFont("Main Menu", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65);
 
-  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16, 65.0f, "Back to Game"))
+  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16, 65, "Back to Game"))
   {
     closeMenu();
     return true;
   }
 
-  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 40, 65.0f, "Load Level", game.network.isHost() || !game.network.isConnected(), 98.0f))
+  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 40, 65, "Load Level", game.network.isHost() || !game.network.isConnected(), 98))
   {
     if (refresh())
     {
@@ -1077,7 +1079,7 @@ bool UI::drawMainMenu()
     return true;
   }
 
-  if (drawButton(game.scaledWidth / 2, game.scaledHeight / 2 - offset + 40, 65.0f, "Save Level", 1, 100.0f))
+  if (drawButton(game.scaledWidth / 2, game.scaledHeight / 2 - offset + 40, 65, "Save Level", 1, 100))
   {
     if (refresh())
     {
@@ -1092,12 +1094,12 @@ bool UI::drawMainMenu()
     return true;
   }
 
-  drawInterface(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset - 10.0f, 200.0f, 1.5f, 183, 0, 16, 16, 0.0f, 64.0f);
+  drawInterface(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset - 10, 200, 2, 183, 0, 16, 16, 0.0f, 64);
 
-  drawCenteredFont("Invite your friends by sharing the link", game.scaledWidth / 2, game.scaledHeight / 2 - offset + optionsOffset, 1.0f, 65.0f);
-  drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset + 16, 65.0f, game.network.url.c_str(), 0);
+  drawCenteredFont("Invite your friends by sharing the link", game.scaledWidth / 2, game.scaledHeight / 2 - offset + optionsOffset, 1.0f, 65);
+  drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset + 16, 65, game.network.url.c_str(), 0);
 
-  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset + 24 + 16, 65.0f, game.timer.milliTime() - mainMenuLastCopy < 1000 ? "Copied!" : "Copy"))
+  if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset + 24 + 16, 65, game.timer.milliTime() - mainMenuLastCopy < 1000 ? "Copied!" : "Copy"))
   {
 #if defined(EMSCRIPTEN)
     copyToClipboard(game.network.url.c_str());
@@ -1117,10 +1119,10 @@ bool UI::drawMainMenu()
 
 bool UI::drawSelectBlockMenu()
 {
-  float left = game.scaledWidth / 2.0f - 196.0f / 2.0f;
-  float top = game.scaledHeight / 2.0f - 143.0f / 2.0f;
+  int left = game.scaledWidth / 2 - 196 / 2;
+  int top = game.scaledHeight / 2 - 143 / 2;
 
-  drawInterface(left - 4, top - 3, 0, 106, 204, 149.9f, 1.0f, 2.0f);
+  drawInterface(left - 4, top - 3, 0, 106, 204, 150, 1.0f, 2);
 
   for (unsigned char blockType = 0, selectedBlockType = 0, index = 0; blockType < std::size(Block::Definitions); blockType++)
   {
@@ -1129,11 +1131,11 @@ bool UI::drawSelectBlockMenu()
       int col = index % 8;
       int row = index / 8;
 
-      float x = 10.0f + left + 23.0f * col;
-      float y = 23.5f + top + 21.0f * row;
+      int x = 10 + left + 23 * col;
+      int y = 23 + top + 21 * row;
 
-      float width = 23.5f;
-      float height = 23.0f;
+      int width = 23;
+      int height = 23;
 
       if (drawSelectBlockButton(blockType, selectedBlockType, x, y, width, height))
       {
@@ -1151,12 +1153,12 @@ bool UI::drawSelectBlockMenu()
   return false;
 }
 
-bool UI::drawSelectBlockButton(unsigned char blockType, unsigned char& selectedBlockType, float x, float y, float width, float height)
+bool UI::drawSelectBlockButton(unsigned char blockType, unsigned char& selectedBlockType, int x, int y, int width, int height)
 {
   bool clicked = mouseState == MouseState::Down;
 
-  float hoverX = x - 4.5f;
-  float hoverY = y - 16.0f;
+  int hoverX = x - 5;
+  int hoverY = y - 16;
 
   bool hover = mousePosition.x >= hoverX &&
     mousePosition.x <= hoverX + width &&
@@ -1165,14 +1167,14 @@ bool UI::drawSelectBlockButton(unsigned char blockType, unsigned char& selectedB
 
   if (selectedBlockType == 0 && hover)
   {
-    drawInterface(hoverX, hoverY, width, height, 183, 0, 16, 16, 0.7f, 2.0f);
-    drawBlock(blockType, x - 1.2f, y + 1.0f, 12.0f);
+    drawInterface(hoverX, hoverY, width, height, 183, 0, 16, 16, 0.7f, 2);
+    drawBlock(blockType, x - 2, y + 1, 12);
 
     selectedBlockType = blockType;
   }
   else
   {
-    drawBlock(blockType, x, y, 10.0f);
+    drawBlock(blockType, x, y, 10);
   }
 
   buttonPositions.push_back({ x, y });
@@ -1180,17 +1182,17 @@ bool UI::drawSelectBlockButton(unsigned char blockType, unsigned char& selectedB
   return hover && clicked;
 }
 
-bool UI::drawTouchButton(unsigned int flag, float x, float y, float z, const char* text, float width, float height, bool multiTouch, bool invisible)
+bool UI::drawTouchButton(unsigned int flag, int x, int y, int z, const char* text, int width, int height, bool multiTouch, bool invisible)
 {
   if (!invisible)
   {
-    drawCenteredFont(text, x + width / 2, y + (height - 8) / 2, 1.0f, z + 100.0f);
+    drawCenteredFont(text, x + width / 2, y + (height - 8) / 2, 1.0f, z + 100);
   }
   
   for (auto touchPosition = touchPositions.begin(); touchPosition != touchPositions.end(); touchPosition++)
   {
-    float hoverX = x;
-    float hoverY = y;
+    int hoverX = x;
+    int hoverY = y;
 
     bool hover = touchPosition->x >= hoverX &&
       touchPosition->x <= hoverX + width &&
@@ -1211,7 +1213,7 @@ bool UI::drawTouchButton(unsigned int flag, float x, float y, float z, const cha
 
       if (!invisible)
       {
-        drawInterface(x, y, width, height, 27, 25, 18, 17, 0.7f, 64.0f);
+        drawInterface(x, y, width, height, 27, 25, 18, 17, 0.7f, 64);
       }
 
       if (multiTouch)
@@ -1225,8 +1227,8 @@ bool UI::drawTouchButton(unsigned int flag, float x, float y, float z, const cha
   {
     bool clicked = mouseState == MouseState::Down;
 
-    float hoverX = x;
-    float hoverY = y;
+    int hoverX = x;
+    int hoverY = y;
 
     bool hover = mousePosition.x >= hoverX &&
       mousePosition.x <= hoverX + width &&
@@ -1237,7 +1239,7 @@ bool UI::drawTouchButton(unsigned int flag, float x, float y, float z, const cha
     {
       if (!invisible)
       {
-        drawInterface(x, y, width, height, 27, 25, 18, 17, 0.7f, 64.0f);
+        drawInterface(x, y, width, height, 27, 25, 18, 17, 0.7f, 64);
       }
 
       return true;
@@ -1246,18 +1248,18 @@ bool UI::drawTouchButton(unsigned int flag, float x, float y, float z, const cha
 
   if (!invisible)
   {
-    drawInterface(x, y, width, height, 27, 25, 18, 17, 1.0f, 64.0f);
+    drawInterface(x, y, width, height, 27, 25, 18, 17, 1.0f, 64);
   }
 
   return false;
 }
 
-bool UI::drawButton(float x, float y, float z, const char* text, int state, float width, float height)
+bool UI::drawButton(int x, int y, int z, const char* text, int state, int width, int height)
 {
   bool clicked = mouseState == MouseState::Down;
 
-  float hoverX = x;
-  float hoverY = y;
+  int hoverX = x;
+  int hoverY = y;
 
   bool hover = mousePosition.x >= hoverX &&
     mousePosition.x <= hoverX + width &&
@@ -1266,12 +1268,12 @@ bool UI::drawButton(float x, float y, float z, const char* text, int state, floa
 
   if (state && hover) { state = 2; }
 
-  drawInterface(x, y, 0.0f, 46.0f + state * 19.99f, width / 2, height, 1.0f, z);
-  drawInterface(x + width / 2, y, 200 - width / 2, 46.0f + state * 19.99f, width / 2, height, 1.0f, z);
+  drawInterface(x, y, 0, 46 + state * 20, width / 2, height, 1.0f, z);
+  drawInterface(x + width / 2, y, 200 - width / 2, 46 + state * 20, width / 2, height, 1.0f, z);
 
   if (state)
   {
-    drawCenteredFont(text, x + width / 2, y + (height - 8) / 2, 1.0f, z + 100.0f);
+    drawCenteredFont(text, x + width / 2, y + (height - 8) / 2, 1.0f, z + 100);
 
     buttonPositions.push_back({ x, y });
   }
@@ -1298,13 +1300,13 @@ bool UI::drawButton(float x, float y, float z, const char* text, int state, floa
       truncatedText = truncatedText.substr(0, index) + "...";
     }
 
-    drawCenteredFont(truncatedText.c_str(), x + width / 2, y + (height - 8) / 2, 0.7f, z + 100.0f);
+    drawCenteredFont(truncatedText.c_str(), x + width / 2, y + (height - 8) / 2, 0.7f, z + 100);
   }
 
   return state && hover && clicked;
 }
 
-void UI::drawBlock(unsigned char blockType, float x, float y, float scale)
+void UI::drawBlock(unsigned char blockType, int x, int y, float scale)
 {
   auto blockDefinition = Block::Definitions[blockType];
 
@@ -1382,7 +1384,7 @@ void UI::drawBlock(unsigned char blockType, float x, float y, float scale)
   }
 }
 
-void UI::drawInterface(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float shade, float z)
+void UI::drawInterface(int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, float shade, int z)
 {
   float size = 0.00390625f;
 
@@ -1395,12 +1397,12 @@ void UI::drawInterface(float x0, float y0, float x1, float y1, float u0, float v
   interfaceVertices.push({x0 + x1, y0, z, (u0 + u1) * size, v0 * size, shade});
 }
 
-void UI::drawInterface(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float shade)
+void UI::drawInterface(int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, float shade)
 {
-  drawInterface(x0, y0, x1, y1, u0, v0, u1, v1, shade, 1.0f);
+  drawInterface(x0, y0, x1, y1, u0, v0, u1, v1, shade, 1);
 }
 
-void UI::drawInterface(float x0, float y0, float x1, float y1, float u, float v, float shade, float z)
+void UI::drawInterface(int x0, int y0, int x1, int y1, int u, int v, float shade, int z)
 {
   float size = 0.00390625;
 
@@ -1413,27 +1415,27 @@ void UI::drawInterface(float x0, float y0, float x1, float y1, float u, float v,
   interfaceVertices.push({x0 + u, y0, z, (x1 + u) * size, y1 * size, shade});
 }
 
-void UI::drawInterface(float x0, float y0, float x1, float y1, float u, float v, float shade)
+void UI::drawInterface(int x0, int y0, int x1, int y1, int u, int v, float shade)
 {
-  drawInterface(x0, y0, x1, y1, u, v, shade, 1.0f);
+  drawInterface(x0, y0, x1, y1, u, v, shade, 1);
 }
 
-void UI::drawInterface(float x0, float y0, float x1, float y1, float u, float v)
+void UI::drawInterface(int x0, int y0, int x1, int y1, int u, int v)
 {
-  drawInterface(x0, y0, x1, y1, u, v, 1.0f);
+  drawInterface(x0, y0, x1, y1, u, v, 1);
 }
 
-void UI::drawFont(const char* text, float x, float y, float shade, float z)
+void UI::drawFont(const char* text, int x, int y, float shade, int z)
 {
-  float width = 0.0f;
+  int width = 0;
 
   const auto length = std::strlen(text);
   for (size_t index = 0; index < length; index++)
   {
-    float u = float(text[index] % 16 << 3);
-    float v = float(text[index] / 16 << 3);
+    int u = text[index] % 16 << 3;
+    int v = text[index] / 16 << 3;
 
-    float height = 7.98f;
+    int height = 8;
 
     fontVertices.push({x + width, y, z, u / 128.0f, v / 128.0f, shade});
     fontVertices.push({x + width, y + height, z, u / 128.0f, (v + height) / 128.0f, shade});
@@ -1443,24 +1445,24 @@ void UI::drawFont(const char* text, float x, float y, float shade, float z)
     fontVertices.push({x + width + height, y + height, z, (u + height) / 128.0f, (v + height) / 128.0f, shade});
     fontVertices.push({x + width + height, y, z, (u + height) / 128.0f, v / 128.0f, shade});
 
-    width += FONT_WIDTHS[int(text[index])];
+    width += FONT_WIDTHS[text[index]];
   }
 }
 
-void UI::drawShadowedFont(const char* text, float x, float y, float shade, float z)
+void UI::drawShadowedFont(const char* text, int x, int y, float shade, int z)
 {
-  drawFont(text, x + 1.0f, y + 1.0f, 0.3f * shade, z);
+  drawFont(text, x + 1, y + 1, 0.3f * shade, z);
   drawFont(text, x, y, shade, z);
 }
 
-void UI::drawShadowedFont(const char* text, float x, float y, float shade)
+void UI::drawShadowedFont(const char* text, int x, int y, float shade)
 {
-  drawShadowedFont(text, x, y, shade, 1.0f);
+  drawShadowedFont(text, x, y, shade, 1);
 }
 
-void UI::drawCenteredFont(const char* text, float x, float y, float shade, float z)
+void UI::drawCenteredFont(const char* text, int x, int y, float shade, int z)
 {
-  float width = 0.0f;
+  int width = 0;
 
   const auto length = std::strlen(text);
   for (size_t i = 0; i < length; i++)
@@ -1471,7 +1473,7 @@ void UI::drawCenteredFont(const char* text, float x, float y, float shade, float
   drawShadowedFont(text, x - width / 2, y, shade, z);
 }
 
-void UI::drawCenteredFont(const char* text, float x, float y, float shade)
+void UI::drawCenteredFont(const char* text, int x, int y, float shade)
 {
-  drawCenteredFont(text, x, y, shade, 1.0f);
+  drawCenteredFont(text, x, y, shade, 1);
 }

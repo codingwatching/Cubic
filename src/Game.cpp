@@ -353,10 +353,10 @@ void Game::resize()
   while (scaleFactor < maxScaleFactor && width / (scaleFactor + 1) >= 280 && height / (scaleFactor + 1) >= 200)
       scaleFactor++;
 
-  scaledWidth = float(width) / float(scaleFactor);
-  scaledHeight = float(height) / float(scaleFactor);
+  scaledWidth = width / scaleFactor;
+  scaledHeight = height / scaleFactor;
 
-  orthographicProjectionMatrix = glm::ortho(0.0f, scaledWidth, scaledHeight, 0.0f, -1000.0f, 1000.0f);
+  orthographicProjectionMatrix = glm::ortho(0.0f, float(scaledWidth), float(scaledHeight), 0.0f, -1000.0f, 1000.0f);
   perspectiveProjectionMatrix = glm::perspective(
     glm::radians(FIELD_OF_VIEW),
     GLfloat(width) / GLfloat(height),

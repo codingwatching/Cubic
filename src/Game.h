@@ -69,8 +69,8 @@ public:
   int windowHeight;
   int windowWidth;
 
-  float scaledHeight;
-  float scaledWidth;
+  int scaledHeight;
+  int scaledWidth;
 
   uint64_t lastTick;
   uint64_t lastChunkUpdates;

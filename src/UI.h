@@ -109,25 +109,25 @@ private:
   bool drawMainMenu();
   bool drawSelectBlockMenu();
 
-  bool drawSelectBlockButton(unsigned char blockType, unsigned char& selectedBlockType, float x, float y, float width, float height);
-  bool drawTouchButton(unsigned int flag, float x, float y, float z, const char* text, float width = 200.0f, float height = 20.0f, bool multiTouch = true, bool invisible = false);
-  bool drawButton(float x, float y, float z, const char* text, int state = 1, float width = 200.0f, float height = 20.0f);
+  bool drawSelectBlockButton(unsigned char blockType, unsigned char& selectedBlockType, int x, int y, int width, int height);
+  bool drawTouchButton(unsigned int flag, int x, int y, int z, const char* text, int width = 200, int height = 20, bool multiTouch = true, bool invisible = false);
+  bool drawButton(int x, int y, int z, const char* text, int state = 1, int width = 200, int height = 20);
 
-  void drawBlock(unsigned char blockType, float x, float y, float scale);
+  void drawBlock(unsigned char blockType, int x, int y, float scale);
 
-  void drawInterface(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float shade, float z);
-  void drawInterface(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float shade);
-  void drawInterface(float x0, float y0, float x1, float y1, float u, float v, float shade, float z);
-  void drawInterface(float x0, float y0, float x1, float y1, float u, float v, float shade);
-  void drawInterface(float x0, float y0, float x1, float y1, float u, float v);
+  void drawInterface(int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, float shade, int z);
+  void drawInterface(int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, float shade);
+  void drawInterface(int x0, int y0, int x1, int y1, int u, int v, float shade, int z);
+  void drawInterface(int x0, int y0, int x1, int y1, int u, int v, float shade);
+  void drawInterface(int x0, int y0, int x1, int y1, int u, int v);
 
-  void drawFont(const char* text, float x, float y, float shade, float z);
-  void drawShadowedFont(const char* text, float x, float y, float shade, float z);
-  void drawShadowedFont(const char* text, float x, float y, float shade);
-  void drawCenteredFont(const char* text, float x, float y, float shade, float z);
-  void drawCenteredFont(const char* text, float x, float y, float shade);
+  void drawFont(const char* text, int x, int y, float shade, int z);
+  void drawShadowedFont(const char* text, int x, int y, float shade, int z);
+  void drawShadowedFont(const char* text, int x, int y, float shade);
+  void drawCenteredFont(const char* text, int x, int y, float shade, int z);
+  void drawCenteredFont(const char* text, int x, int y, float shade);
 
-  const float FONT_WIDTHS[256] = {
+  const int FONT_WIDTHS[256] = {
     1, 8, 8, 8, 8, 8, 8, 9, 9, 1, 8, 8, 1, 8, 8, 8,
     8, 8, 1, 1, 8, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8,
     4, 2, 5, 6, 6, 7, 7, 3, 5, 5, 8, 6, 2, 6, 2, 6,
