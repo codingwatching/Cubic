@@ -639,7 +639,7 @@ void UI::drawLogs()
       }
 
       drawInterface(0, interfaceY, maxWidth, interfaceHeight, 183, 0, 16, 16, 0.12f);
-      drawFont(log->text.c_str(), 2, fontY, 1.0f, 2);
+      drawFont(log->text.c_str(), 2, float(fontY), 1.0f, 2);
 
       log++;
     }
@@ -890,8 +890,8 @@ bool UI::drawStatusMenu()
     {
       int offset = -2;
 
-      drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 38 + 2 + offset, 0.6f);
-      drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 25 + 2 + offset, 1.0f);
+      drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - 38 + 2 + offset, 0.6f);
+      drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - 25 + 2 + offset, 1.0f);
 
       if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - 10 + 2 + offset, 1, "Create a new room"))
       {
@@ -930,8 +930,8 @@ bool UI::drawStatusMenu()
     }
     else
     {
-      drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 25, 0.6f);
-      drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 12, 1.0f);
+      drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - 25, 0.6f);
+      drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - 12, 1.0f);
 
       if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 + 5, 1, "Play offline"))
       {
@@ -943,8 +943,8 @@ bool UI::drawStatusMenu()
   }
   else
   {
-    drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2, game.scaledHeight / 2 - 13, 0.6f);
-    drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2, game.scaledHeight / 2, 1.0f);
+    drawCenteredFont(statusTitle.c_str(), game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - 13, 0.6f);
+    drawCenteredFont(statusDescription.c_str(), game.scaledWidth / 2.0f, game.scaledHeight / 2.0f, 1.0f);
   }
 
   return false;
@@ -955,7 +955,7 @@ bool UI::drawLoadMenu()
   const int offset = 73;
 
   drawInterface(0, 0, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64);
-  drawCenteredFont("Load Level", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65);
+  drawCenteredFont("Load Level", game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - offset, 1.0f, 65);
 
   for (int i = 0; i < 4; i++)
   {
@@ -1005,7 +1005,7 @@ bool UI::drawSaveMenu()
   const int offset = 73;
 
   drawInterface(0, 0, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64);
-  drawCenteredFont("Save Level", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65);
+  drawCenteredFont("Save Level", game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - offset, 1.0f, 65);
 
   for (int i = 0; i < 4; i++)
   {
@@ -1056,7 +1056,7 @@ bool UI::drawMainMenu()
   const int optionsOffset = 80;
 
   drawInterface(0, 0, game.scaledWidth, game.scaledHeight, 183, 0, 16, 16, 0.08f, 64);
-  drawCenteredFont("Main Menu", game.scaledWidth / 2, game.scaledHeight / 2 - offset, 1.0f, 65);
+  drawCenteredFont("Main Menu", game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - offset, 1.0f, 65);
 
   if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + 16, 65, "Back to Game"))
   {
@@ -1096,7 +1096,7 @@ bool UI::drawMainMenu()
 
   drawInterface(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset - 10, 200, 2, 183, 0, 16, 16, 0.0f, 64);
 
-  drawCenteredFont("Invite your friends by sharing the link", game.scaledWidth / 2, game.scaledHeight / 2 - offset + optionsOffset, 1.0f, 65);
+  drawCenteredFont("Invite your friends by sharing the link", game.scaledWidth / 2.0f, game.scaledHeight / 2.0f - offset + optionsOffset, 1.0f, 65);
   drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset + 16, 65, game.network.url.c_str(), 0);
 
   if (drawButton(game.scaledWidth / 2 - 100, game.scaledHeight / 2 - offset + optionsOffset + 24 + 16, 65, game.timer.milliTime() - mainMenuLastCopy < 1000 ? "Copied!" : "Copy"))
@@ -1186,7 +1186,7 @@ bool UI::drawTouchButton(unsigned int flag, int x, int y, int z, const char* tex
 {
   if (!invisible)
   {
-    drawCenteredFont(text, x + width / 2, y + (height - 8) / 2, 1.0f, z + 100);
+    drawCenteredFont(text, x + width / 2.0f, y + (height - 8) / 2.0f, 1.0f, z + 100.0f);
   }
   
   for (auto touchPosition = touchPositions.begin(); touchPosition != touchPositions.end(); touchPosition++)
@@ -1273,7 +1273,7 @@ bool UI::drawButton(int x, int y, int z, const char* text, int state, int width,
 
   if (state)
   {
-    drawCenteredFont(text, x + width / 2, y + (height - 8) / 2, 1.0f, z + 100);
+    drawCenteredFont(text, x + width / 2.0f, y + (height - 8) / 2.0f, 1.0f, z + 100.0f);
 
     buttonPositions.push_back({ x, y });
   }
@@ -1300,7 +1300,7 @@ bool UI::drawButton(int x, int y, int z, const char* text, int state, int width,
       truncatedText = truncatedText.substr(0, index) + "...";
     }
 
-    drawCenteredFont(truncatedText.c_str(), x + width / 2, y + (height - 8) / 2, 0.7f, z + 100);
+    drawCenteredFont(truncatedText.c_str(), float(x + width / 2), float(y + (height - 8) / 2), 0.7f, z + 100.0f);
   }
 
   return state && hover && clicked;
@@ -1425,7 +1425,7 @@ void UI::drawInterface(int x0, int y0, int x1, int y1, int u, int v)
   drawInterface(x0, y0, x1, y1, u, v, 1);
 }
 
-void UI::drawFont(const char* text, int x, int y, float shade, int z)
+void UI::drawFont(const char* text, float x, float y, float shade, float z)
 {
   int width = 0;
 
@@ -1438,29 +1438,29 @@ void UI::drawFont(const char* text, int x, int y, float shade, int z)
     int height = 8;
 
     fontVertices.push(x + width, y, z, u / 128.0f, v / 128.0f, shade);
-    fontVertices.push(x + width, y + height, z, u / 128.0f, (v + height) / 128.0f, shade);
-    fontVertices.push(x + width + height, y + height, z, (u + height) / 128.0f, (v + height) / 128.0f, shade);
+    fontVertices.push(x + width, int(y + height), z, u / 128.0f, int(v + height) / 128.0f, shade);
+    fontVertices.push(x + width + height, int(y + height), z, int(u + height) / 128.0f, int(v + height) / 128.0f, shade);
 
     fontVertices.push(x + width, y, z, u / 128.0f, v / 128.0f, shade);
-    fontVertices.push(x + width + height, y + height, z, (u + height) / 128.0f, (v + height) / 128.0f, shade);
-    fontVertices.push(x + width + height, y, z, (u + height) / 128.0f, v / 128.0f, shade);
+    fontVertices.push(x + width + height, int(y + height), z, int(u + height) / 128.0f, int(v + height) / 128.0f, shade);
+    fontVertices.push(x + width + height, y, z, int(u + height) / 128.0f, v / 128.0f, shade);
 
     width += FONT_WIDTHS[text[index]];
   }
 }
 
-void UI::drawShadowedFont(const char* text, int x, int y, float shade, int z)
+void UI::drawShadowedFont(const char* text, float x, float y, float shade, float z)
 {
   drawFont(text, x + 1, y + 1, 0.3f * shade, z);
   drawFont(text, x, y, shade, z);
 }
 
-void UI::drawShadowedFont(const char* text, int x, int y, float shade)
+void UI::drawShadowedFont(const char* text, float x, float y, float shade)
 {
   drawShadowedFont(text, x, y, shade, 1);
 }
 
-void UI::drawCenteredFont(const char* text, int x, int y, float shade, int z)
+void UI::drawCenteredFont(const char* text, float x, float y, float shade, float z)
 {
   int width = 0;
 
@@ -1470,10 +1470,10 @@ void UI::drawCenteredFont(const char* text, int x, int y, float shade, int z)
     width += FONT_WIDTHS[(unsigned char)text[i]];
   }
 
-  drawShadowedFont(text, x - width / 2, y, shade, z);
+  drawShadowedFont(text, x - width / 2.0f, y, shade, z);
 }
 
-void UI::drawCenteredFont(const char* text, int x, int y, float shade)
+void UI::drawCenteredFont(const char* text, float x, float y, float shade)
 {
   drawCenteredFont(text, x, y, shade, 1);
 }

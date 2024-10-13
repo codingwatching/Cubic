@@ -121,11 +121,11 @@ private:
   void drawInterface(int x0, int y0, int x1, int y1, int u, int v, float shade);
   void drawInterface(int x0, int y0, int x1, int y1, int u, int v);
 
-  void drawFont(const char* text, int x, int y, float shade, int z);
-  void drawShadowedFont(const char* text, int x, int y, float shade, int z);
-  void drawShadowedFont(const char* text, int x, int y, float shade);
-  void drawCenteredFont(const char* text, int x, int y, float shade, int z);
-  void drawCenteredFont(const char* text, int x, int y, float shade);
+  void drawFont(const char* text, float x, float y, float shade, float z);
+  void drawShadowedFont(const char* text, float x, float y, float shade, float z);
+  void drawShadowedFont(const char* text, float x, float y, float shade);
+  void drawCenteredFont(const char* text, float x, float y, float shade, float z);
+  void drawCenteredFont(const char* text, float x, float y, float shade);
 
   const int FONT_WIDTHS[256] = {
     1, 8, 8, 8, 8, 8, 8, 9, 9, 1, 8, 8, 1, 8, 8, 8,
